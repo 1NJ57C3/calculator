@@ -9,7 +9,7 @@ The purpose of writing this application is to:
   1. Reinforce my understanding and use of the `useContext` hook
   1. Have a little fun
 
-### Objectives
+### Objectives / Features
 The Calculator...
   - displays input/output
   - has buttons

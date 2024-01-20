@@ -10,7 +10,7 @@ module.exports = {
     "overrides": [
         {
             "env": {
-                "node": true
+                "node": true,
             },
             "files": [
                 ".eslintrc.{js,cjs}"
@@ -28,6 +28,7 @@ module.exports = {
         "react"
     ],
     "rules": {
-        'react/react-in-jsx-scope': 0,
+        "react/react-in-jsx-scope": 0,
+        "react/prop-types": 0,
     }
 }
