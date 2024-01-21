@@ -3,61 +3,64 @@ import { createContext, useContext, useState } from "react";
 const CalculatorContext = createContext(null);
 
 export function CalculatorProvider({ children }) {
-  const [input, setInput] = useState({value: "0", isUserInput: true});
+  const [input, setInput] = useState({ value: "0", isUserInput: true });
   const [equation, setEquation] = useState([]);
   const [buffer, setBuffer] = useState(0);
 
   function handleCalculations() {
-    let output = equation.map(element => Number(element) || element);
-    let i = 1;
+    let output = equation.map((element) => Number(element) || element);
 
-    function doMath(operation) {
-      output.splice(i-1, 3, operation)
+    function doMath(i, operation) {
+      output.splice(i - 1, 3, operation);
     }
 
-    while (output.length > 2 && i < output.length) {
-      let ltOperand = output[i-1];
-      let rtOperand = output[i+1];
+    if (output.length % 2 === 0) {
+      output.pop();
+    }
 
-      if (output[i] === "*" && rtOperand) {
-        doMath(multiply(ltOperand, rtOperand));
-      } else if (output[i] === "/" && rtOperand) {
-        doMath(divide(ltOperand, rtOperand));
-      } else {
-        i++;
+    // Do multiplication and division in equation from left to right
+    for (let i = 1; i < output.length; i += 2) {
+      let ltOperand = output[i - 1];
+      let rtOperand = output[i + 1];
+
+      if (output[i] === "*") {
+        doMath(i, multiply(ltOperand, rtOperand));
+        i -= 2;
+      } else if (output[i] === "/") {
+        doMath(i, divide(ltOperand, rtOperand));
+        i -= 2;
       }
     }
 
-    i = 1;
+    // Do multiplication and division in equation from left to right
+    for (let i = 1; i < output.length; i += 2) {
+      let ltOperand = output[i - 1];
+      let rtOperand = output[i + 1];
 
-    while (output.length > 2 && i < output.length) {
-      let ltOperand = output[i-1];
-      let rtOperand = output[i+1];
-
-      if (output[i] === "+" && rtOperand) {
-        doMath(add(ltOperand, rtOperand));
-      } else if (output[i] === "-" && rtOperand) {
-        doMath(subtract(ltOperand, rtOperand));
-      } else {
-        i++;
+      if (output[i] === "+") {
+        doMath(i, add(ltOperand, rtOperand));
+        i -= 2;
+      } else if (output[i] === "-") {
+        doMath(i, subtract(ltOperand, rtOperand));
+        i -= 2;
       }
     }
 
-    setBuffer(output);
+    setBuffer(output[0] || 0);
   }
 
   function add(a, b) {
     return a + b;
   }
-  
+
   function subtract(a, b) {
     return a - b;
   }
-  
+
   function multiply(a, b) {
     return a * b;
   }
-  
+
   function divide(a, b) {
     return a / b;
   }
